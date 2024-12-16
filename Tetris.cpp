@@ -1,7 +1,3 @@
-//
-// Created by Michele Pittori on 15/12/2024.
-//
-
 #include "Tetris.h"
 #include <iostream>
 #include <ncurses/curses.h>
