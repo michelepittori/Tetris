@@ -45,3 +45,20 @@ void Game::viewBoard(const std::string &fileName) {
     }
     inputFile.close();
 }
+
+
+void testBoard(){
+    Game game;
+    int score = game.updateScore(3);
+    string username;
+    cout<<"Inserisci il tuo nome"<<endl;
+    cin>>username;
+    game.saveScore("Classifica.txt",username, score);
+    game.viewBoard("Classifica.txt");
+
+}
+int main() {
+
+testBoard();
+
+    return 0;
