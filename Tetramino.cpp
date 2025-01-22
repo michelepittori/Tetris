@@ -1,32 +1,7 @@
-#ifndef ILTETRIS_TETRAMINO_H
-#define ILTETRIS_TETRAMINO_H
-
-
-class Tetramino {
-protected:
-    int shape[4][4];            //Matrice per la forma del Tetramino
-    char type;                 // Tipo del Tetramino (I,L,O,T,Z)
-    int x;
-    int y;
-
-
-public:
-    Tetramino(int startX, int startY, char type, bool isMirrored = false);
-    int getX();
-    int getY();
-    void move(int dx, int dy);
-    void rotateClockwise();
-    void rotateCounterClockwise();
-    void initializeShape(bool isMirrored);
-    void draw();
-    int getColor(char type);
-};
-
-
-#endif //ILTETRIS_TETRAMINO_H
-
 #include "ncurses.h"
 #include "Tetramino.h"
+#include <iostream>
+
 
 Tetramino :: Tetramino(int startX, int startY, char type, bool isMirrored) {
     this-> x = startX;
@@ -35,6 +10,13 @@ Tetramino :: Tetramino(int startX, int startY, char type, bool isMirrored) {
     initializeShape(isMirrored);
 }
 
+Tetramino Tetramino::generate(){
+    char type[5] = {'I','L','O','T','Z'};
+    int randomType = rand() % 5;
+    bool isMirrored = rand() % 2;
+
+    return Tetramino (5,1,type[randomType],isMirrored);
+}
 void Tetramino::initializeShape(bool isMirrored){
     //inizializza la shape a 0
     for(int i = 0; i < 4; i = i + 1){
@@ -91,20 +73,20 @@ void Tetramino::initializeShape(bool isMirrored){
     }
 }
 
-int Tetramino::getX() {
+ int Tetramino::getX()const {
     return x;
 }
 
-int Tetramino::getY() {
+int Tetramino::getY()const {
     return y;
 }
 
 int Tetramino::getColor(char type) {
-    if(type == 'I') return 1;
-    else if(type == 'L') return 2;
-    else if(type == 'O') return 3;
-    else if(type == 'T') return 4;
-    else return 5;
+    if(type == 'I') return 2;
+    else if(type == 'L') return 3;
+    else if(type == 'O') return 4;
+    else if(type == 'T') return 5;
+    else return 6;
 }
 
 void Tetramino::move(int dx, int dy){
@@ -157,44 +139,10 @@ void Tetramino::draw() {
     attroff(COLOR_PAIR(color));
 }
 
-#include <iostream>
-#include "Tetramino.h"
-#include "ncurses.h"
-Tetramino generate(){
-    char type[5] = {'I','L','O','T','Z'};
-    int randomType = rand() % 5;
-    bool isMirrored = rand() % 2;
-    Tetramino tetramino(5,5,type[randomType],isMirrored);
-    return tetramino;
+const int (&Tetramino :: get_shape()const)[4][4]{
+    return shape;
 }
-int main() {
-    initscr();
-    noecho();
-    cbreak();
-    start_color();
-    keypad(stdscr, true);
-    init_pair(1, COLOR_CYAN, COLOR_CYAN);
-    init_pair(2, COLOR_YELLOW, COLOR_YELLOW);
-    init_pair(3, COLOR_BLUE, COLOR_BLUE);
-    init_pair(4, COLOR_MAGENTA, COLOR_MAGENTA);
-    init_pair(5, COLOR_RED, COLOR_RED);
-    srand(time(0));
-    Tetramino tetramino = generate();
 
-    while (true) {
-
-        clear();
-        tetramino.draw();
-        refresh();
-        int ch = getch();
-        if(ch == 'x') break;
-
-        if(ch == KEY_DOWN) tetramino.move(0,1);
-        if(ch == KEY_LEFT) tetramino.move(-1,0);
-        if(ch == KEY_RIGHT) tetramino.move(1,0);
-        if(ch == 'q') tetramino.rotateClockwise();
-        if(ch == 'w') tetramino.rotateCounterClockwise();
-    }
-    endwin();
-    return 0;
+char Tetramino::getType()const{
+    return type;
 }
