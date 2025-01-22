@@ -146,3 +146,40 @@ const int (&Tetramino :: get_shape()const)[4][4]{
 char Tetramino::getType()const{
     return type;
 }
+
+void testTetramino(){
+    initscr();
+    noecho();
+    cbreak();
+    start_color();
+    keypad(stdscr, true);
+    init_pair(1, COLOR_CYAN, COLOR_CYAN);
+    init_pair(2, COLOR_YELLOW, COLOR_YELLOW);
+    init_pair(3, COLOR_BLUE, COLOR_BLUE);
+    init_pair(4, COLOR_MAGENTA, COLOR_MAGENTA);
+    init_pair(5, COLOR_RED, COLOR_RED);
+    srand(time(0));
+
+    Tetramino tetramino = tetramino.generate();
+
+    while (true) {
+        clear();
+        tetramino.draw();
+        refresh();
+        int ch = getch();
+        if (ch == 'x') break;
+
+        if (ch == KEY_DOWN) tetramino.move(0, 1);
+        if (ch == KEY_LEFT) tetramino.move(-1, 0);
+        if (ch == KEY_RIGHT) tetramino.move(1, 0);
+        if (ch == 'q') tetramino.rotateClockwise();
+        if (ch == 'w') tetramino.rotateCounterClockwise();
+    }
+
+    endwin();
+}
+
+int main(){
+    testTetramino();
+return 0;
+}
