@@ -2,21 +2,19 @@
 #include "Tetramino.h"
 #include <iostream>
 
-
-Tetramino :: Tetramino(int startX, int startY, char type, bool isMirrored) {
-    this-> x = startX;
-    this-> y = startY;
-    this-> type = type;
-    initializeShape(isMirrored);
-}
-
-Tetramino Tetramino::generate(){
-    char type[5] = {'I','L','O','T','Z'};
+Tetramino::Tetramino(){
+    char types[5] = {'I', 'L', 'O', 'T', 'Z'};
     int randomType = rand() % 5;
     bool isMirrored = rand() % 2;
 
-    return Tetramino (5,1,type[randomType],isMirrored);
+    x = 4;
+    y = 0;
+    type = types[randomType];
+    this->isMirrored = false;
+
+    initializeShape(isMirrored);
 }
+
 void Tetramino::initializeShape(bool isMirrored){
     //inizializza la shape a 0
     for(int i = 0; i < 4; i = i + 1){
@@ -94,6 +92,18 @@ void Tetramino::move(int dx, int dy){
     y = y + dy;
 }
 
+void Tetramino::moveRight(Tetramino &tetramino) {
+    tetramino.move(1,0);
+}
+
+void Tetramino::moveLeft(Tetramino &tetramino) {
+    tetramino.move(-1,0);
+}
+
+void Tetramino::moveDown(Tetramino &tetramino) {
+    tetramino.move(0,1);
+}
+
 void Tetramino::rotateClockwise() {
     //matrice temporanea per non sovrascrivere
     int temp[4][4];
@@ -132,50 +142,59 @@ void Tetramino::draw() {
     for(int i = 0; i < 4; i = i + 1){
         for(int j = 0; j < 4; j = j + 1){
             if(shape[i][j] == 1){
-                mvprintw(y + i,(x + j) * 2,"  ");
+                mvprintw(y + i,(x + j) * 2,"[]");
             }
         }
     }
     attroff(COLOR_PAIR(color));
+    refresh();
 }
 
-const int (&Tetramino :: get_shape()const)[4][4]{
-    return shape;
-}
 
-char Tetramino::getType()const{
-    return type;
-}
-
-void testTetramino(){
+void testTetramino() {
     initscr();
     noecho();
     cbreak();
     start_color();
     keypad(stdscr, true);
-    init_pair(1, COLOR_CYAN, COLOR_CYAN);
-    init_pair(2, COLOR_YELLOW, COLOR_YELLOW);
-    init_pair(3, COLOR_BLUE, COLOR_BLUE);
-    init_pair(4, COLOR_MAGENTA, COLOR_MAGENTA);
-    init_pair(5, COLOR_RED, COLOR_RED);
+    init_pair(2, COLOR_CYAN, COLOR_CYAN);
+    init_pair(3, COLOR_YELLOW, COLOR_YELLOW);
+    init_pair(4, COLOR_BLUE, COLOR_BLUE);
+    init_pair(5, COLOR_MAGENTA, COLOR_MAGENTA);
+    init_pair(6, COLOR_RED, COLOR_RED);
     srand(time(0));
 
-    Tetramino tetramino = tetramino.generate();
+    Tetramino tetramino = Tetramino();
+    Grid grid;
+    bool quit = false;
+    timeout(300);
 
-    while (true) {
+    while (!quit) {
         clear();
+        grid.draw_grid(0,0);
         tetramino.draw();
         refresh();
         int ch = getch();
-        if (ch == 'x') break;
-
-        if (ch == KEY_DOWN) tetramino.move(0, 1);
-        if (ch == KEY_LEFT) tetramino.move(-1, 0);
-        if (ch == KEY_RIGHT) tetramino.move(1, 0);
-        if (ch == 'q') tetramino.rotateClockwise();
-        if (ch == 'w') tetramino.rotateCounterClockwise();
+        if (ch == 'x') {
+            quit = true;
+        } else if (ch == KEY_DOWN){
+            tetramino.moveDown(tetramino);
+        }
+        else if (ch == KEY_LEFT){
+            tetramino.moveLeft(tetramino);
+        }
+        else if (ch == KEY_RIGHT){
+            tetramino.moveRight(tetramino);
+        }
+        else if (ch == 'q'){
+            tetramino.rotateClockwise();
+        }
+        else if (ch == 'w'){
+            tetramino.rotateCounterClockwise();
+        }
+        tetramino.moveDown(tetramino);
     }
-
+    timeout(-1);
     endwin();
 }
 
