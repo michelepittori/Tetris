@@ -1,14 +1,39 @@
 #include "iostream"
 #include <fstream>
 #include "Game.h"
+#include "ncurses.h"
 using namespace std;
 
 
 
-Game ::Game() : currentTetramino(3,0,'I', false),
-                nextTetramino(3,1,'I',false){
+Game::Game() {
+    currentTetramino = Tetramino();
+    nextTetramino = Tetramino();
+    this->interval = 500;
+    this->clearedLines = 0;
+    this-> score = 0;
+    this->totalScore = 0;
+    this->gameover = false;
+    init();
 }
 
+
+void Game::init() {
+    initscr();
+    noecho();
+    cbreak();
+    start_color();
+    keypad(stdscr,true);
+
+    init_pair(2, COLOR_CYAN, COLOR_BLACK);
+    init_pair(3, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(4, COLOR_BLUE, COLOR_BLACK);
+    init_pair(5, COLOR_MAGENTA, COLOR_BLACK);
+    init_pair(6, COLOR_RED, COLOR_BLACK);
+
+    srand(time(0));
+    timeout(interval);
+}
 
 int Game::updateScore(int completedLines) {
     //completedLInes sarebbe un valore da ritornare in una funzione di pulizia delle righe complete
@@ -46,6 +71,85 @@ void Game::viewBoard(const std::string &fileName) {
     inputFile.close();
 }
 
+void Game::processInput() {
+
+    int ch = getch();
+    if (ch == 'x'){
+        gameover = true;
+    }
+    else if (ch == KEY_DOWN){
+        currentTetramino.moveDown(currentTetramino);
+        if(grid.isCollision(currentTetramino)){
+            currentTetramino.move(0,-1);
+        }
+    }
+    else if (ch == KEY_LEFT){
+        currentTetramino.moveLeft(currentTetramino);
+        if(grid.isCollision(currentTetramino)){
+            currentTetramino.moveRight(currentTetramino);
+        }
+    }
+    else if (ch == KEY_RIGHT){
+        currentTetramino.moveRight(currentTetramino);
+        if(grid.isCollision(currentTetramino)){
+            currentTetramino.moveLeft(currentTetramino);
+        }
+    }
+    else if (ch == 'q'){
+        currentTetramino.rotateClockwise();
+        if(grid.isCollision(currentTetramino)){
+            currentTetramino.rotateCounterClockwise();
+        }
+    }
+    else if (ch == 'w'){
+        currentTetramino.rotateCounterClockwise();
+        if(grid.isCollision(currentTetramino)){
+            currentTetramino.rotateClockwise();
+        }
+    }
+}
+
+void Game::render() {
+    clear();
+    grid.draw_grid(0,0); //disegna la griglia
+    currentTetramino.draw(); //disegna il tetramino
+    //informazioni sul punteggio e linee pulite
+    mvprintw(0,30, "Lines: %d", clearedLines);
+    mvprintw(1,30, "Score: %d", score);
+
+    refresh(); //aggiorna lo schermo
+}
+
+void Game::run() {
+    while(!gameover){
+    processInput();
+    update();
+    render();
+    }
+    end();
+}
+
+
+void Game::update() {
+    currentTetramino.moveDown(currentTetramino);
+    if(grid.isCollision(currentTetramino)){
+        grid.placeTetramino(currentTetramino);
+        currentTetramino = nextTetramino;
+        nextTetramino = Tetramino();
+    }
+}
+
+void Game::end() {
+    timeout(-1);
+    clear();
+    mvprintw(10,10, "Game over! Press x to exit.");
+    getch();
+    refresh();
+    endwin();
+}
+
+
+
 
 void testBoard(){
     Game game;
@@ -57,8 +161,9 @@ void testBoard(){
     game.viewBoard("Classifica.txt");
 
 }
+
 int main() {
 
 testBoard();
-
-    return 0;
+return 0;
+}
