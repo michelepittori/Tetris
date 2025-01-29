@@ -142,7 +142,9 @@ void Tetramino::draw() {
     for(int i = 0; i < 4; i = i + 1){
         for(int j = 0; j < 4; j = j + 1){
             if(shape[i][j] == 1){
+                attron(A_REVERSE);
                 mvprintw(y + i,(x + j) * 2,"[]");
+                attroff(A_REVERSE);
             }
         }
     }
