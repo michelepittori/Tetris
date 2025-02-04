@@ -48,14 +48,42 @@ int Game::updateScore(int completedLines) {
 }
 
 void Game::saveScore(const string &fileName, string username, int score) {
-    ofstream outputFile(fileName, ios::app);
-    if (!outputFile) {
+    string usernames[100];
+    int scores[100];
+    int count = 0;
+
+    ifstream inputFile(fileName);
+    if (!inputFile) {
         cout << "Errore nell'apertura del file!" << endl;
         return;
     }
-    outputFile << username << " " << score << endl;
+
+    while (inputFile >> usernames[count] >> scores[count]) {
+        count++;
+        if (count >= 100) break;
+    }
+    inputFile.close();
+
+    int i;
+    for (i = 0; i < count; i++) {
+        if (score > scores[i]) {
+            break;
+        }
+    }
+
+    if (count < 100) count++;
+    for (int j = count - 1; j > i; j--) {
+        usernames[j] = usernames[j - 1];
+        scores[j] = scores[j - 1];
+    }
+    usernames[i] = username;
+    scores[i] = score;
+
+    ofstream outputFile(fileName);
+    for (int k = 0; k < count; k++) {
+        outputFile << usernames[k] << " " << scores[k] << endl;
+    }
     outputFile.close();
-    cout << "Punteggio salvato con successo!" << endl;
 }
 
 void Game::viewBoard(const std::string &fileName) {
