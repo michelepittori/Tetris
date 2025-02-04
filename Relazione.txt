@@ -1,0 +1,70 @@
+Progetto Tetris
+
+Membri del gruppo: Ferrari Nicolò (nicolo.ferrari10@studio.unibo.it), Pittori Michele ()
+
+Introduzione: Il progetto è un'implementazione del gioco Tetris tramite libreria ncurses. Il gioco viene controllato da tastiera e permette di muovere i pezzi che cadono automaticamente all'interno di una griglia 20x10. Il gioco termina quando un pezzo non può più essere posizionato all'interno dell'area di gioco. 
+
+Divisione dei compiti: 
+
+-Tetramini, punteggio e salvataggio dei file (Ferrari Nicolò)
+
+-Griglia, gestione delle collisioni e menù principale (Pittori Michele)
+
+Abbiamo deciso di suddividere il progetto in 3 classi principali: 
+
+Tetramino → gestisce la logica dei tetramini
+Grid → gestisce le collisioni e la griglia
+Game → gestisce la logica di gioco
+
+
+Classe Tetramino:
+
+Abbiamo scelto di implementare i tetramini tramite una matrice 4x4 rappresentando anche le forme opzionali presenti nella presentazione. 
+
+I tetramini sono caratterizzati da:
+posizione iniziale ( x e y)
+un carattere type per distinguere il tipo di forma 
+campo booleano isMirrored per distinguere i pezzi speculari (tipo la Z) 
+
+Nella classe tetramino, oltre al costruttore sono presenti tutti i metodi per la gestione del movimento e per la stampa. 
+
+Metodi principali:
+Move() → aggiorna la posizione del tetramino
+MoveLeft() → muove il tetramino a sinistra
+MoveRight() → muove il tetramino a destra
+MoveDown() → accelera la caduta del tetramino
+RotateClockwise() → ruota il tetramino in senso orario
+RotateCounterClockwise → ruota il tetramino in senso antiorario
+Draw() → disegna il tetramino
+
+Sono inoltre presenti dei metodi per il ritorno di valori utili per distinguere i tetramini in fase di spawn e render, come getColor e getType che ritornano rispettivamente il colore e il tipo del tetramino corrente. Per quanto riguarda la visualizzazione dei tetramini abbiamo deciso di usare gli spazi vuoti,sfruttando la funzione Attron(A_REVERSE) per la gestione del colore tramite terminale. Per quanto riguarda la logica di rotazione dei pezzi, nelle funzioni viene creata una matrice di copia del tetramino corrente in modo da non sovrascriverlo e infine vengono scambiate le colonne per ottenere una rotazione di 90° in senso orario. Lo stesso concetto è stato applicato alle righe per la rotazione antioraria.
+ 
+
+Classe Grid:
+
+Classe Game:
+
+La classe Game, come accennato prima, si occupa della logica di gioco ed è costituita da:
+tetramino corrente
+tetramino successivo
+booleano  gameover
+intero score per il punteggio
+intero ClearedLines per il conto delle linee pulite 
+intero interval  per l'intervallo di caduta dei tetramini. 
+metodo “init()” per l'inizializzazione di ncurses, per l'attivazione dei colori e infine per la randomizzazione della generazione dei tetramini. 
+
+Metodi principali:
+
+Render(): pulisce lo schermo e stampa la griglia, i tetramini e le informazioni a schermo (punteggio e linee pulite).
+
+ProcessInput(): gestisce i comandi tramite getch() reso non bloccante da timeout()
+
+Update(): aggiorna la posizione dei tetramini, controlla le collisioni e genera un nuovo pezzo dopo aver piazzato quello corrente.
+
+End(): Termina ncurses e stampa a schermo il messaggio di gameover con relativo punteggio. 
+
+Tutti questi metodi li abbiamo uniti nel metodo run() che gestisce il loop di gioco finchè gameover non diventa vero
+
+Nella classe game è inoltre presente la logica del calcolo del punteggio. Tramite il metodo UpdateScore infatti, in base a quante linee sono state completate si ottiene un punteggio maggiore. Il calcolo del punteggio viene svolto tramite un ciclo for che itera da 1 fino alla variabile clearedLines,presa come parametro, e moltiplicando l'indice i *100. Oltre a questo, a ogni iterazione viene sommato il bonus accumulato che viene poi sommato al campo score e infine aggiunto al campo totalScore. Così facendo si ottiene 100 punti per una riga pulita, 300 per due, 600 per tre e infine per quattro lineee completate il punteggio corrisponde a 1000. 
+
+Infine, nella classe game sono presenti i metodi per il salvataggio del punteggio in un file esterno “Classifica.txt” con il relativo metodo per l'ordinamento e visualizzazione della classifica.
