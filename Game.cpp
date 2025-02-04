@@ -161,9 +161,53 @@ void testBoard(){
     game.viewBoard("Classifica.txt");
 
 }
+// vanno messe le chiamate prima e dopo le partite
+void Game::menu() {
+    int highlight = 0;
+    int choice = 0;
+    int ch;
+    
+    initscr();
+    clear();
+    noecho();
+    cbreak();
+    keypad(stdscr, TRUE);
+    
+    while (true) {
+        if (highlight == 0) attron(A_REVERSE);
+        mvprintw(5, 10, "Gioca");
+        attroff(A_REVERSE);
 
-int main() {
-
-testBoard();
-return 0;
+        if (highlight == 1) attron(A_REVERSE);
+        mvprintw(7, 10, "Classifica");
+        attroff(A_REVERSE);
+        
+        ch = getch();
+        
+        if (ch == KEY_UP)
+            highlight = (highlight - 1 + 2) % 2;
+        else if (ch == KEY_DOWN)
+            highlight = (highlight + 1) % 2;
+        else if (ch == 10) { // Invio
+            choice = highlight;
+            endwin();
+            if (choice == 1) {
+                ifstream inputFile("leaderboard.txt");
+                if (!inputFile) {
+                    cout << "Errore nell'apertura del file della classifica!" << endl;
+                    return;
+                }
+                cout << "Classifica:" << endl;
+                string username;
+                int score;
+                while (inputFile >> username) {
+                    if (inputFile >> score) {
+                        cout << username << " " << score << endl;
+                    }
+                }
+                inputFile.close();
+            }
+            return;
+        }
+    }
 }
