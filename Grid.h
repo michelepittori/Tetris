@@ -6,6 +6,7 @@ class Grid {
 protected:
     int GRID_HEIGHT;
     int GRID_WIDTH;
+    int grid[GRID_HEIGHT][GRID_WIDTH];
 
 public:
     Grid();
