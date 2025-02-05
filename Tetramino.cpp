@@ -143,7 +143,7 @@ void Tetramino::draw() {
         for(int j = 0; j < 4; j = j + 1){
             if(shape[i][j] == 1){
                 attron(A_REVERSE);
-                mvprintw(y + i,(x + j) * 2,"[]");
+                mvprintw(y + i,(x + j) * 2,"  ");
                 attroff(A_REVERSE);
             }
         }
@@ -152,55 +152,10 @@ void Tetramino::draw() {
     refresh();
 }
 
-
-void testTetramino() {
-    initscr();
-    noecho();
-    cbreak();
-    start_color();
-    keypad(stdscr, true);
-    init_pair(2, COLOR_CYAN, COLOR_CYAN);
-    init_pair(3, COLOR_YELLOW, COLOR_YELLOW);
-    init_pair(4, COLOR_BLUE, COLOR_BLUE);
-    init_pair(5, COLOR_MAGENTA, COLOR_MAGENTA);
-    init_pair(6, COLOR_RED, COLOR_RED);
-    srand(time(0));
-
-    Tetramino tetramino = Tetramino();
-    Grid grid;
-    bool quit = false;
-    timeout(300);
-
-    while (!quit) {
-        clear();
-        grid.draw_grid(0,0);
-        tetramino.draw();
-        refresh();
-        int ch = getch();
-        if (ch == 'x') {
-            quit = true;
-        } else if (ch == KEY_DOWN){
-            tetramino.moveDown(tetramino);
-        }
-        else if (ch == KEY_LEFT){
-            tetramino.moveLeft(tetramino);
-        }
-        else if (ch == KEY_RIGHT){
-            tetramino.moveRight(tetramino);
-        }
-        else if (ch == 'q'){
-            tetramino.rotateClockwise();
-        }
-        else if (ch == 'w'){
-            tetramino.rotateCounterClockwise();
-        }
-        tetramino.moveDown(tetramino);
-    }
-    timeout(-1);
-    endwin();
+char Tetramino::getType()const {
+    return type;
 }
 
-int main(){
-    testTetramino();
-return 0;
+const int (&Tetramino::getShape()const)[4][4]{
+    return shape;
 }
