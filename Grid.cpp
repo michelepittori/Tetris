@@ -37,7 +37,7 @@ void Grid::draw_grid(int start_y, int start_x){
     }
 }
 
-bool Grid::isCollision(Tetramino& tetramino) {
+bool Grid::isCollision(Tetramino& tetramino, int new_x, int new_y) {
      for (int i = 0; i < 4; ++i) {
             for (int j = 0; j < 4; ++j) {
                 if (tetramino.shape[i][j] == 1) {
@@ -50,7 +50,7 @@ bool Grid::isCollision(Tetramino& tetramino) {
                     }
 
                     if (grid_y >= GRID_HEIGHT || (grid_y >= 0 && grid[grid_y][grid_x] != 0)) {
-                        placeTetramino(tetramino);
+                        placeTetramino(tetramino,grid_x,grid_y);
                         return true; // Collisione con il basso o con un blocco esistente
                     }
                 }
@@ -59,7 +59,7 @@ bool Grid::isCollision(Tetramino& tetramino) {
         return false;
 }
 
-void Grid::placeTetramino(Tetramino& tetramino) {
+void Grid::placeTetramino(Tetramino& tetramino, int x, int y) {
     for (int i = 0; i < 4; ++i) {
             for (int j = 0; j < 4; ++j) {
                 if (tetramino.shape[i][j] == 1) {
