@@ -1,6 +1,6 @@
 Progetto Tetris
 
-Membri del gruppo: Ferrari Nicolò (nicolo.ferrari10@studio.unibo.it), Pittori Michele ()
+Membri del gruppo: Ferrari Nicolò (nicolo.ferrari10@studio.unibo.it), Pittori Michele (michele.pittori@studio.unibo.it)
 
 Introduzione: Il progetto è un'implementazione del gioco Tetris tramite libreria ncurses. Il gioco viene controllato da tastiera e permette di muovere i pezzi che cadono automaticamente all'interno di una griglia 20x10. Il gioco termina quando un pezzo non può più essere posizionato all'interno dell'area di gioco. 
 
@@ -41,6 +41,11 @@ Sono inoltre presenti dei metodi per il ritorno di valori utili per distinguere 
  
 
 Classe Grid:
+
+In questa classe viene creata la griglia di gioco, un 20 x 10 con celle inizializzate a 0 (vuote) che vengono gestite dai 3 principali metodi:
+drawGrid() che genera graficamente la griglia
+isCollision() che controlla che i pezzi non si sovrappongano e che atterrino
+placeTetramino() che in caso di collisione verso il basso salva il tetramino nella griglia impostando le celle a 1 (piene)
 
 Classe Game:
 
