@@ -27,6 +27,7 @@ public:
     void update();
     void end();
     bool isGameover();
+    void reset();
 };
 
 #endif
