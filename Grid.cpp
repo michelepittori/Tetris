@@ -2,8 +2,11 @@
 #include "ncurses.h"
 
 Grid::Grid() {
-    this -> GRID_HEIGHT = 20;
-    this -> GRID_WIDTH = 20;
+    for (int i = 0; i < GRID_HEIGHT; ++i) {
+        for (int j = 0; j < GRID_WIDTH; ++j) {
+            grid[i][j] = 0;
+        }
+    }
 }
 
 // Funzione per disegnare la griglia con bordi
@@ -47,6 +50,7 @@ bool Grid::isCollision(Tetramino& tetramino) {
                     }
 
                     if (grid_y >= GRID_HEIGHT || (grid_y >= 0 && grid[grid_y][grid_x] != 0)) {
+                        placeTetramino(tetramino);
                         return true; // Collisione con il basso o con un blocco esistente
                     }
                 }
