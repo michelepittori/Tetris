@@ -5,7 +5,7 @@ implementazione del tetris classico in c++ utilizzando la libreria ncurses.
 # Autori
 
 Ferrari Nicolo' (nicolo.ferrari@studio.unibo.it)
-Pittori Michele ()
+Pittori Michele (michele.pittori@studio.unibo.it)
 
 # Requisiti
 
