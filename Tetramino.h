@@ -23,6 +23,9 @@ public:
     void draw();
     static int getColor(char type);
     bool placeTetramino(const Tetramino &tetramino);
+    const int(&getShape()const)[4][4];
+    bool placeTetramino(const Tetramino &tetramino);
+    char getType() const;
 };
 
 #endif //ILTETRIS_TETRAMINO_H
