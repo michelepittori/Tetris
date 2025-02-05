@@ -11,14 +11,13 @@ Game::Game() {
     nextTetramino = Tetramino();
     this->interval = 500;
     this->clearedLines = 0;
-    this-> score = 0;
-    this->totalScore = 0;
+    this->score = 0;
     this->gameover = false;
     init();
 }
 
 
-void Game::init() {
+void Game::init(){
     initscr();
     noecho();
     cbreak();
@@ -35,16 +34,13 @@ void Game::init() {
     timeout(interval);
 }
 
-int Game::updateScore(int completedLines) {
-    //completedLInes sarebbe un valore da ritornare in una funzione di pulizia delle righe complete
-    int score = completedLines * 100;
+int Game::updateScore(int completedLines){
     int bonus = 0;
-    for (int i = 0; i < completedLines; i = i + 1) {
+    for (int i = 1; i <= completedLines; i = i + 1){
         bonus = bonus + (i * 100); //se i = 1 bonus = 100, se i = 2 bonus = 200 + 100 ecc..
     }
-    score += bonus;
-    totalScore = totalScore + score;
-    return totalScore;
+    score = score + bonus;
+    return score;
 }
 
 void Game::saveScore(const string &fileName, string username, int score) {
@@ -87,7 +83,6 @@ void Game::saveScore(const string &fileName, string username, int score) {
 }
 
 void Game::viewBoard(const std::string &fileName) {
-    //non ordina i punteggi
     ifstream inputFile;
     inputFile.open(fileName);
     string line;
@@ -137,7 +132,7 @@ void Game::processInput() {
     }
 }
 
-void Game::render() {
+void Game::render(){
     clear();
     grid.draw_grid(0,0); //disegna la griglia
     currentTetramino.draw(); //disegna il tetramino
@@ -145,14 +140,15 @@ void Game::render() {
     mvprintw(0,30, "Lines: %d", clearedLines);
     mvprintw(1,30, "Score: %d", score);
 
-    refresh(); //aggiorna lo schermo
+    refresh();
 }
 
 void Game::run() {
     while(!gameover){
-    processInput();
-    update();
-    render();
+        processInput();
+        update();
+        render();
+        refresh();
     }
     end();
 }
@@ -167,40 +163,38 @@ void Game::update() {
     }
 }
 
-void Game::end() {
+void Game::end(){
     timeout(-1);
     clear();
-    mvprintw(10,10, "Game over! Press x to exit.");
-    getch();
+    mvprintw(10,10, "Game over! premi un tasto per continuare");
     refresh();
+    getch();
+    clear();
+    echo();
+    char username[51];
+    memset(username,0,sizeof(username));
+    clear();
+    mvprintw(10,10, "Inserisci il tuo nome: ");
+    refresh();
+    getnstr(username,50);
+    noecho();
+    string user(username);
     endwin();
+    saveScore("Classifica.txt",username,score);
+    menu();
 }
 
-
-
-
-void testBoard(){
-    Game game;
-    int score = game.updateScore(3);
-    string username;
-    cout<<"Inserisci il tuo nome"<<endl;
-    cin>>username;
-    game.saveScore("Classifica.txt",username, score);
-    game.viewBoard("Classifica.txt");
-
-}
-// vanno messe le chiamate prima e dopo le partite
 void Game::menu() {
     int highlight = 0;
     int choice = 0;
     int ch;
-    
+
     initscr();
     clear();
     noecho();
     cbreak();
     keypad(stdscr, TRUE);
-    
+
     while (true) {
         if (highlight == 0) attron(A_REVERSE);
         mvprintw(5, 10, "Gioca");
@@ -209,9 +203,9 @@ void Game::menu() {
         if (highlight == 1) attron(A_REVERSE);
         mvprintw(7, 10, "Classifica");
         attroff(A_REVERSE);
-        
+
         ch = getch();
-        
+
         if (ch == KEY_UP)
             highlight = (highlight - 1 + 2) % 2;
         else if (ch == KEY_DOWN)
@@ -219,23 +213,32 @@ void Game::menu() {
         else if (ch == 10) { // Invio
             choice = highlight;
             endwin();
-            if (choice == 1) {
-                ifstream inputFile("leaderboard.txt");
+            if(choice == 0){
+                reset();
+                run();
+            }
+            else if (choice == 1) {
+                ifstream inputFile("Classifica.txt");
                 if (!inputFile) {
                     cout << "Errore nell'apertura del file della classifica!" << endl;
                     return;
                 }
                 cout << "Classifica:" << endl;
-                string username;
-                int score;
-                while (inputFile >> username) {
-                    if (inputFile >> score) {
-                        cout << username << " " << score << endl;
-                    }
-                }
-                inputFile.close();
+                viewBoard("Classifica.txt");
+
             }
             return;
         }
     }
+}
+
+
+void Game::reset() {
+    gameover = false;
+    currentTetramino = Tetramino();
+    nextTetramino = Tetramino();
+    score = 0;
+    clearedLines = 0;
+    //griglia[][] = initialize();
+    timeout(interval);
 }
