@@ -6,13 +6,15 @@ class Grid {
 protected:
     int GRID_HEIGHT;
     int GRID_WIDTH;
-    int grid[GRID_HEIGHT][GRID_WIDTH];
 
 public:
     Grid();
-    void draw_grid(int start_y, int start_x);
-    bool isCollision(Tetramino& tetramino);
-    void placeTetramino(Tetramino& tetramino);
+    int grid[22][12];
+    void initialize();
+    void draw_grid();
+    bool isCollision(const Tetramino &tetramino);
+    bool placeTetramino(const Tetramino &tetramino);
+    int clearLines();
 };
 
 #endif //ILTETRIS_GRID_H
