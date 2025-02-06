@@ -47,6 +47,8 @@ drawGrid() che genera graficamente la griglia
 isCollision() che controlla che i pezzi non si sovrappongano e che atterrino
 placeTetramino() che in caso di collisione verso il basso salva il tetramino nella griglia impostando le celle a 1 (piene)
 
+Ci sono inoltre altre funzioni minori che si occupano dell'eliminazione delle righe e dello scorrimento della griglia in caso di eliminazione righe
+
 Classe Game:
 
 La classe Game, come accennato prima, si occupa della logica di gioco ed è costituita da:
