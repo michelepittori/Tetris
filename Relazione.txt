@@ -42,15 +42,13 @@ Sono inoltre presenti dei metodi per il ritorno di valori utili per distinguere 
 
 Classe Grid:
 
-In questa classe viene creata la griglia di gioco, un 22x 12 per motivi di implementazione.
-Le celle vengono inizializzate a 0 (vuoto) dal costruttore
+In questa classe viene creata la griglia di gioco, un 22x 12 con le celle dei bordi inizializzate a 1 (piene) e quelle interne a 0 (vuote)
 I principali metodi di Grid sono:
 
-drawGrid() che genera graficamente la griglia
-isCollision() che controlla che i pezzi non si sovrappongano e che atterrino
-placeTetramino() che in caso di collisione verso il basso salva il tetramino nella griglia
-
-Ci sono inoltre altre funzioni minori che si occupano dell'eliminazione delle righe e dello scorrimento della griglia in caso di eliminazione righe
+drawGrid() → che genera graficamente la griglia
+isCollision() → che controlla che i pezzi non si sovrappongano e che atterrino
+placeTetramino() → che in caso di collisione verso il basso salva il tetramino nella griglia
+clearLines() → che elimina le righe piene e fa scorrere verso il basso le celle piene sovrastanti
 
 Classe Game:
 
@@ -65,15 +63,17 @@ metodo “init()” per l'inizializzazione di ncurses, per l'attivazione dei col
 
 Metodi principali:
 
-Render(): pulisce lo schermo e stampa la griglia, i tetramini e le informazioni a schermo (punteggio e linee pulite).
+Render() → pulisce lo schermo e stampa la griglia, i tetramini e le informazioni a schermo (punteggio e linee pulite).
 
-ProcessInput(): gestisce i comandi tramite getch() reso non bloccante da timeout()
+ProcessInput() → gestisce i comandi tramite getch() reso non bloccante da timeout()
 
-Update(): aggiorna la posizione dei tetramini, controlla le collisioni e genera un nuovo pezzo dopo aver piazzato quello corrente.
+Update() → aggiorna la posizione dei tetramini, controlla le collisioni e genera un nuovo pezzo dopo aver piazzato quello corrente.
 
-End(): Termina ncurses e stampa a schermo il messaggio di gameover con relativo punteggio. 
+End() → termina ncurses e stampa a schermo il messaggio di gameover con relativo punteggio. 
 
-Tutti questi metodi li abbiamo uniti nel metodo run() che gestisce il loop di gioco finchè gameover non diventa vero
+Menu() → gestisce l'interfaccia grafica dell'utente reindirizzandolo verso il gioco o la classifica.
+
+Tutti questi metodi li abbiamo uniti nel metodo run() che gestisce il loop di gioco finchè gameover non diventa vero.
 
 Nella classe game è inoltre presente la logica del calcolo del punteggio. Tramite il metodo UpdateScore infatti, in base a quante linee sono state completate si ottiene un punteggio maggiore. Il calcolo del punteggio viene svolto tramite un ciclo for che itera da 1 fino alla variabile clearedLines,presa come parametro, e moltiplicando l'indice i *100. Oltre a questo, a ogni iterazione viene sommato il bonus accumulato che viene poi sommato al campo score e infine aggiunto al campo totalScore. Così facendo si ottiene 100 punti per una riga pulita, 300 per due, 600 per tre e infine per quattro lineee completate il punteggio corrisponde a 1000. 
 
