@@ -3,7 +3,6 @@
 
 class Tetramino {
 protected:
-    int shape[4][4];            //Matrice per la forma del Tetramino
     char type;                 // Tipo del Tetramino (I,L,O,T,Z)
     int x;
     int y;
@@ -11,6 +10,7 @@ protected:
 
 public:
     Tetramino();
+    int shape[4][4];
     int getX() const;
     int getY() const;
     void move(int dx, int dy);
@@ -22,7 +22,6 @@ public:
     void initializeShape(bool isMirrored);
     void draw();
     static int getColor(char type);
-    bool placeTetramino(const Tetramino &tetramino);
     const int(&getShape()const)[4][4];
     char getType() const;
 };
