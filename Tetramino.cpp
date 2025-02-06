@@ -1,17 +1,22 @@
 #include "ncurses.h"
 #include "Tetramino.h"
 #include <iostream>
-
+#include "Grid.h"
 Tetramino::Tetramino(){
     char types[5] = {'I', 'L', 'O', 'T', 'Z'};
     int randomType = rand() % 5;
     bool isMirrored = rand() % 2;
 
-    x = 4;
+    x = 5;
     y = 0;
     type = types[randomType];
+    if(type == 'I'){
+        y = 1;
+    }
+    else if(type == 'T' || type == 'Z'){
+        y = -1;
+    }
     this->isMirrored = false;
-
     initializeShape(isMirrored);
 }
 
