@@ -9,7 +9,7 @@ using namespace std;
 Game::Game() {
     currentTetramino = Tetramino();
     nextTetramino = Tetramino();
-    this->interval = 500;
+    this->interval = 300;
     this->clearedLines = 0;
     this->score = 0;
     this->gameover = false;
@@ -106,6 +106,7 @@ void Game::processInput() {
             currentTetramino.move(0,-1);
         }
     }
+
     else if (ch == KEY_LEFT){
         currentTetramino.moveLeft(currentTetramino);
         if(grid.isCollision(currentTetramino)){
@@ -132,9 +133,10 @@ void Game::processInput() {
     }
 }
 
+
 void Game::render(){
     clear();
-    grid.draw_grid(0,0); //disegna la griglia
+    grid.draw_grid(); //disegna la griglia
     currentTetramino.draw(); //disegna il tetramino
     //informazioni sul punteggio e linee pulite
     mvprintw(0,30, "Lines: %d", clearedLines);
@@ -157,9 +159,19 @@ void Game::run() {
 void Game::update() {
     currentTetramino.moveDown(currentTetramino);
     if(grid.isCollision(currentTetramino)){
+        currentTetramino.move(0,-1);
         grid.placeTetramino(currentTetramino);
+        int linesCleared = grid.clearLines();
+        if(linesCleared > 0){
+            updateScore(linesCleared);
+            clearedLines = clearedLines + 1;
+        }
+
         currentTetramino = nextTetramino;
         nextTetramino = Tetramino();
+        if(grid.isCollision(currentTetramino)){
+            gameover = true;
+        }
     }
 }
 
@@ -239,6 +251,6 @@ void Game::reset() {
     nextTetramino = Tetramino();
     score = 0;
     clearedLines = 0;
-    //griglia[][] = initialize();
+    grid.initialize();
     timeout(interval);
 }
