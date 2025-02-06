@@ -7,9 +7,8 @@ using namespace std;
 class Game {
 protected:
     int interval;
-    int totalScore;
-    bool gameover;
     int score;
+    bool gameover;
     int clearedLines;
     Grid grid;
     Tetramino currentTetramino;
@@ -22,11 +21,12 @@ public:
     void viewBoard(const string &fileName);
     void init();
     void processInput();
+    void handleCollision();
     void render();
     void run();
     void update();
     void end();
-    bool isGameover();
+    void menu();
     void reset();
 };
 
