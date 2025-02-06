@@ -217,7 +217,8 @@ void Game::menu() {
         attroff(A_REVERSE);
 
         ch = getch();
-
+        
+        //algoritmo di selezione scelta
         if (ch == KEY_UP)
             highlight = (highlight - 1 + 2) % 2;
         else if (ch == KEY_DOWN)
@@ -225,10 +226,12 @@ void Game::menu() {
         else if (ch == 10) { // Invio
             choice = highlight;
             endwin();
+            // scelta 1 gioca
             if(choice == 0){
                 reset();
                 run();
             }
+                // scelta 2 classifica
             else if (choice == 1) {
                 ifstream inputFile("Classifica.txt");
                 if (!inputFile) {
