@@ -42,10 +42,13 @@ Sono inoltre presenti dei metodi per il ritorno di valori utili per distinguere 
 
 Classe Grid:
 
-In questa classe viene creata la griglia di gioco, un 20 x 10 con celle inizializzate a 0 (vuote) che vengono gestite dai 3 principali metodi:
+In questa classe viene creata la griglia di gioco, un 22x 12 per motivi di implementazione.
+Le celle vengono inizializzate a 0 (vuoto) dal costruttore
+I principali metodi di Grid sono:
+
 drawGrid() che genera graficamente la griglia
 isCollision() che controlla che i pezzi non si sovrappongano e che atterrino
-placeTetramino() che in caso di collisione verso il basso salva il tetramino nella griglia impostando le celle a 1 (piene)
+placeTetramino() che in caso di collisione verso il basso salva il tetramino nella griglia
 
 Ci sono inoltre altre funzioni minori che si occupano dell'eliminazione delle righe e dello scorrimento della griglia in caso di eliminazione righe
 
